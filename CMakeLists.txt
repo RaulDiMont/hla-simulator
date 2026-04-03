@@ -27,3 +27,11 @@ target_link_libraries(aircraft_simulator
     rti1516e
     fedtime1516e
 )
+
+# Temporary JSBSim test executable
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(JSBSIM REQUIRED JSBSim)
+
+add_executable(test_jsbsim src/test_jsbsim.cpp)
+target_include_directories(test_jsbsim PRIVATE ${JSBSIM_INCLUDE_DIRS})
+target_link_libraries(test_jsbsim ${JSBSIM_LIBRARIES})
