@@ -1,3 +1,4 @@
+#include <vector>
 #include <memory>  // Must be included before any OpenRTI headers
 #ifndef AIRCRAFT_FEDERATE_H
 #define AIRCRAFT_FEDERATE_H
@@ -20,8 +21,8 @@ public:
     ~AircraftFederate();
 
     // Connect to RTI, create and join the federation
-    void initialize(const std::wstring& federationName,
-                    const std::wstring& fomPath);
+  void initialize(const std::wstring& federationName,
+                const std::vector<std::wstring>& fomModules);
 
     // Main simulation loop: updates and publishes position
     void run();

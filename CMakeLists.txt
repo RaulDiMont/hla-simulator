@@ -18,6 +18,7 @@ add_executable(aircraft_simulator
     src/main.cpp
     src/AircraftFederate.cpp
     src/MonitorFederate.cpp
+    src/RadarFederate.cpp
 )
 
 # Link against OpenRTI libraries including logical time support

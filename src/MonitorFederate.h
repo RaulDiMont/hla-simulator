@@ -18,8 +18,8 @@ public:
     ~MonitorFederate();
 
     // Connect to RTI and join the federation
-    void initialize(const std::wstring &federationName,
-                    const std::wstring &fomPath);
+void initialize(const std::wstring& federationName,
+                const std::vector<std::wstring>& fomModules);
 
     // Main loop: process incoming callbacks from the RTI
     void run();

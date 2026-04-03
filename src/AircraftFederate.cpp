@@ -26,23 +26,22 @@ AircraftFederate::~AircraftFederate()
 // ------------------------------------------------------------
 
 void AircraftFederate::initialize(const std::wstring& federationName,
-                                  const std::wstring& fomPath)
+                                  const std::vector<std::wstring>& fomModules)
 {
     _federationName = federationName;
 
-    // Create the RTI ambassador (our communication channel with the RTI)
+    // Create the RTI ambassador
     rti1516e::RTIambassadorFactory factory;
     _rtiAmbassador = factory.createRTIambassador();
 
-    // Connect to the RTI using thread mode (single process, no network)
+    // Connect to the RTI using thread mode
     _rtiAmbassador->connect(*this, rti1516e::HLA_EVOKED, L"thread://");
 
-    // Create the federation execution using our FOM file
+    // Create the federation execution using all FOM modules
     try {
-        _rtiAmbassador->createFederationExecution(federationName, fomPath);
+        _rtiAmbassador->createFederationExecution(federationName, fomModules);
         std::wcout << L"[Aircraft] Federation created." << std::endl;
     } catch (const rti1516e::FederationExecutionAlreadyExists&) {
-        // Another federate already created it, that is fine
         std::wcout << L"[Aircraft] Federation already exists, joining." << std::endl;
     }
 

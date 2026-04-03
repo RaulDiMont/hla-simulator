@@ -21,7 +21,7 @@ MonitorFederate::~MonitorFederate()
 // ------------------------------------------------------------
 
 void MonitorFederate::initialize(const std::wstring& federationName,
-                                 const std::wstring& fomPath)
+                                 const std::vector<std::wstring>& fomModules)
 {
     _federationName = federationName;
 
@@ -32,9 +32,9 @@ void MonitorFederate::initialize(const std::wstring& federationName,
     // Connect to the RTI using thread mode
     _rtiAmbassador->connect(*this, rti1516e::HLA_EVOKED, L"thread://");
 
-    // Create the federation execution, or join if it already exists
+    // Create the federation execution using all FOM modules
     try {
-        _rtiAmbassador->createFederationExecution(federationName, fomPath);
+        _rtiAmbassador->createFederationExecution(federationName, fomModules);
         std::wcout << L"[Monitor] Federation created." << std::endl;
     } catch (const rti1516e::FederationExecutionAlreadyExists&) {
         std::wcout << L"[Monitor] Federation already exists, joining." << std::endl;

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objectModel xsi:type="dataModelType"
+             xmlns="http://standards.ieee.org/IEEE1516-2010"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <!-- Radar system FOM module -->
+    <modelIdentification>
+        <name>RadarSimulation</name>
+        <type>FOM</type>
+        <version>1.0</version>
+        <purpose>Radar contact data published by the Radar federate</purpose>
+    </modelIdentification>
+
+    <!-- Radar contact object class -->
+    <objects>
+        <objectClass>
+            <name>HLAobjectRoot</name>
+            <objectClass>
+                <name>RadarContact</name>
+                <!-- Distance from radar station to the tracked aircraft in km -->
+                <attribute>
+                    <name>Distance</name>
+                    <dataType>HLAfloat64BE</dataType>
+                    <updateType>Periodic</updateType>
+                    <ownership>DivestAcquire</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <transportation>HLAreliable</transportation>
+                    <order>Receive</order>
+                </attribute>
+                <!-- Bearing angle in degrees from north to the tracked aircraft -->
+                <attribute>
+                    <name>Bearing</name>
+                    <dataType>HLAfloat64BE</dataType>
+                    <updateType>Periodic</updateType>
+                    <ownership>DivestAcquire</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <transportation>HLAreliable</transportation>
+                    <order>Receive</order>
+                </attribute>
+                <!-- True if the aircraft is within radar range -->
+                <attribute>
+                    <name>IsInRange</name>
+                    <dataType>HLAboolean</dataType>
+                    <updateType>Conditional</updateType>
+                    <ownership>DivestAcquire</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <transportation>HLAreliable</transportation>
+                    <order>Receive</order>
+                </attribute>
+            </objectClass>
+        </objectClass>
+    </objects>
+
+</objectModel>
