@@ -107,3 +107,35 @@ hla_simulator/
 
 ## GitHub
 https://github.com/RaulDiMont/hla-simulator
+
+
+
+## Development Environment
+
+### Windows Machine
+- OS: Windows 10
+- CPU: AMD Ryzen 7 5800X
+- GPU: 
+- Unreal Engine: 5.5
+- JetBrains Rider (IDE for Unreal C++ development)
+- Visual Studio 2022
+
+### WSL2 Environment
+- Distro: Ubuntu 22.04 LTS
+- OpenRTI: installed at /usr/local
+- JSBSim: installed at /usr/local
+- Project path: ~/hla_simulator
+- GitHub: https://github.com/RaulDiMont/hla-simulator
+
+### Building the project
+```bash
+cd ~/hla_simulator/build
+cmake ..
+make -j8
+./aircraft_simulator
+```
+
+## Conversation History
+This project was developed in a Claude.ai conversation. The full conversation
+history is available and contains detailed explanations of every design
+decision, bug fix, and implementation detail.
