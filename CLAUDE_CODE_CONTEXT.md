@@ -35,7 +35,7 @@ Integrate the HLA simulator with Unreal Engine 5 and Cesium for Unreal so that:
 ## Development environment
 - Windows 10, Ryzen 7 5800X
 - WSL2 Ubuntu 22.04
-- Unreal Engine 5.5
+- Unreal Engine 5.5.4
 - JetBrains Rider (IDE for Unreal C++ development)
 - Visual Studio 2022 (build tools only - required by Unreal even with Rider)
 - OpenRTI installed at /usr/local in WSL2
@@ -56,6 +56,6 @@ cd ~/hla_simulator/build
 ```
 
 ## Suggested first message to Claude Code
-"I want to integrate my HLA simulator with Unreal Engine 5 and Cesium for Unreal.
+"I want to integrate my HLA simulator with Unreal Engine 5.5.4 and Cesium for Unreal.
 Read CLAUDE_CODE_CONTEXT.md and UNREAL_PLAN.md from my GitHub repo 
 https://github.com/RaulDiMont/hla-simulator before starting."

@@ -115,10 +115,9 @@ https://github.com/RaulDiMont/hla-simulator
 ### Windows Machine
 - OS: Windows 10
 - CPU: AMD Ryzen 7 5800X
-- GPU: 
-- Unreal Engine: 5.5
-- JetBrains Rider (IDE for Unreal C++ development)
-- Visual Studio 2022
+- Unreal Engine: 5.5.4
+- IDE: JetBrains Rider
+- Visual Studio 2022 (build tools only — required by Unreal even with Rider)
 
 ### WSL2 Environment
 - Distro: Ubuntu 22.04 LTS
