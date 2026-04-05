@@ -8,10 +8,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Find OpenRTI installed on the system
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(RTI1516E REQUIRED rti1516e)
+pkg_check_modules(JSBSIM REQUIRED JSBSim)
 
-# Include OpenRTI headers
+# Include headers
 include_directories(${RTI1516E_INCLUDE_DIRS})
+include_directories(${JSBSIM_INCLUDE_DIRS})
 link_directories(${RTI1516E_LIBRARY_DIRS})
+link_directories(${JSBSIM_LIBRARY_DIRS})
 
 # Define the executable and its source files
 add_executable(aircraft_simulator
@@ -21,17 +24,10 @@ add_executable(aircraft_simulator
     src/RadarFederate.cpp
 )
 
-# Link against OpenRTI libraries including logical time support
+# Link against OpenRTI and JSBSim libraries
 target_link_libraries(aircraft_simulator
     ${RTI1516E_LIBRARIES}
     rti1516e
     fedtime1516e
+    ${JSBSIM_LIBRARIES}
 )
-
-# Temporary JSBSim test executable
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(JSBSIM REQUIRED JSBSim)
-
-add_executable(test_jsbsim src/test_jsbsim.cpp)
-target_include_directories(test_jsbsim PRIVATE ${JSBSIM_INCLUDE_DIRS})
-target_link_libraries(test_jsbsim ${JSBSIM_LIBRARIES})

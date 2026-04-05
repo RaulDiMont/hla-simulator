@@ -7,8 +7,7 @@
 // Constructor / Destructor
 // ------------------------------------------------------------
 
-MonitorFederate::MonitorFederate() :
-    _running(false)
+MonitorFederate::MonitorFederate() : _running(false)
 {
 }
 
@@ -20,8 +19,8 @@ MonitorFederate::~MonitorFederate()
 // initialize: connect to RTI and join the federation
 // ------------------------------------------------------------
 
-void MonitorFederate::initialize(const std::wstring& federationName,
-                                 const std::vector<std::wstring>& fomModules)
+void MonitorFederate::initialize(const std::wstring &federationName,
+                                 const std::vector<std::wstring> &fomModules)
 {
     _federationName = federationName;
 
@@ -33,10 +32,13 @@ void MonitorFederate::initialize(const std::wstring& federationName,
     _rtiAmbassador->connect(*this, rti1516e::HLA_EVOKED, L"thread://");
 
     // Create the federation execution using all FOM modules
-    try {
+    try
+    {
         _rtiAmbassador->createFederationExecution(federationName, fomModules);
         std::wcout << L"[Monitor] Federation created." << std::endl;
-    } catch (const rti1516e::FederationExecutionAlreadyExists&) {
+    }
+    catch (const rti1516e::FederationExecutionAlreadyExists &)
+    {
         std::wcout << L"[Monitor] Federation already exists, joining." << std::endl;
     }
 
@@ -46,9 +48,9 @@ void MonitorFederate::initialize(const std::wstring& federationName,
 
     // Resolve FOM handles for Aircraft class and its attributes
     _aircraftClassHandle = _rtiAmbassador->getObjectClassHandle(L"HLAobjectRoot.Aircraft");
-    _latitudeHandle      = _rtiAmbassador->getAttributeHandle(_aircraftClassHandle, L"Latitude");
-    _longitudeHandle     = _rtiAmbassador->getAttributeHandle(_aircraftClassHandle, L"Longitude");
-    _altitudeHandle      = _rtiAmbassador->getAttributeHandle(_aircraftClassHandle, L"Altitude");
+    _latitudeHandle = _rtiAmbassador->getAttributeHandle(_aircraftClassHandle, L"Latitude");
+    _longitudeHandle = _rtiAmbassador->getAttributeHandle(_aircraftClassHandle, L"Longitude");
+    _altitudeHandle = _rtiAmbassador->getAttributeHandle(_aircraftClassHandle, L"Altitude");
 
     // Subscribe to Aircraft attributes
     subscribeAircraft();
@@ -80,7 +82,8 @@ void MonitorFederate::run()
     std::wcout << L"[Monitor] Waiting for aircraft updates..." << std::endl;
 
     _running = true;
-    while (_running) {
+    while (_running)
+    {
         // Ask the RTI to process pending callbacks (blocking up to 1 second)
         _rtiAmbassador->evokeMultipleCallbacks(0.1, 1.0);
     }
@@ -92,12 +95,12 @@ void MonitorFederate::run()
 
 void MonitorFederate::discoverObjectInstance(
     rti1516e::ObjectInstanceHandle theObject,
-    rti1516e::ObjectClassHandle    theObjectClass,
-    std::wstring const&            theObjectInstanceName)
+    rti1516e::ObjectClassHandle theObjectClass,
+    std::wstring const &theObjectInstanceName)
     RTI_THROW((rti1516e::FederateInternalError))
 {
     // Register the new aircraft in both maps
-    _aircraftMap[theObject]   = AircraftState{0.0, 0.0, 0.0};
+    _aircraftMap[theObject] = AircraftState{0.0, 0.0, 0.0};
     _aircraftNames[theObject] = theObjectInstanceName;
 
     std::wcout << L"[Monitor] New aircraft discovered: "
@@ -111,10 +114,10 @@ void MonitorFederate::discoverObjectInstance(
 // ------------------------------------------------------------
 
 void MonitorFederate::removeObjectInstance(
-    rti1516e::ObjectInstanceHandle      theObject,
-    rti1516e::VariableLengthData const& theUserSuppliedTag,
-    rti1516e::OrderType                 sentOrder,
-    rti1516e::SupplementalRemoveInfo    theRemoveInfo)
+    rti1516e::ObjectInstanceHandle theObject,
+    rti1516e::VariableLengthData const &theUserSuppliedTag,
+    rti1516e::OrderType sentOrder,
+    rti1516e::SupplementalRemoveInfo theRemoveInfo)
     RTI_THROW((rti1516e::FederateInternalError))
 {
     auto it = _aircraftMap.find(theObject);
@@ -131,7 +134,8 @@ void MonitorFederate::removeObjectInstance(
     _aircraftNames.erase(theObject);
 
     // If no more aircraft are being tracked, stop the monitor
-    if (_aircraftMap.empty()) {
+    if (_aircraftMap.empty())
+    {
         std::wcout << L"[Monitor] No more aircraft in federation, shutting down." << std::endl;
         _running = false;
     }
@@ -142,12 +146,12 @@ void MonitorFederate::removeObjectInstance(
 // ------------------------------------------------------------
 
 void MonitorFederate::reflectAttributeValues(
-    rti1516e::ObjectInstanceHandle           theObject,
-    rti1516e::AttributeHandleValueMap const& theAttributeValues,
-    rti1516e::VariableLengthData const&      theUserSuppliedTag,
-    rti1516e::OrderType                      sentOrder,
-    rti1516e::TransportationType             theType,
-    rti1516e::SupplementalReflectInfo        theReflectInfo)
+    rti1516e::ObjectInstanceHandle theObject,
+    rti1516e::AttributeHandleValueMap const &theAttributeValues,
+    rti1516e::VariableLengthData const &theUserSuppliedTag,
+    rti1516e::OrderType sentOrder,
+    rti1516e::TransportationType theType,
+    rti1516e::SupplementalReflectInfo theReflectInfo)
     RTI_THROW((rti1516e::FederateInternalError))
 {
     // Ignore updates from unknown aircraft
@@ -156,10 +160,11 @@ void MonitorFederate::reflectAttributeValues(
         return;
 
     // Get a reference to this specific aircraft state
-    AircraftState& state = _aircraftMap[theObject];
+    AircraftState &state = _aircraftMap[theObject];
 
     // Deserialize each received attribute value
-    for (auto& pair : theAttributeValues) {
+    for (auto &pair : theAttributeValues)
+    {
         rti1516e::HLAfloat64BE value;
         value.decode(pair.second);
 
@@ -171,7 +176,7 @@ void MonitorFederate::reflectAttributeValues(
             state.altitude = value;
     }
 
-   // Print the updated position for this specific aircraft
+    // Print the updated position for this specific aircraft
     std::wcout << L"[Monitor] Aircraft update"
                << L" | Instance: " << _aircraftNames[theObject]
                << L" | Lat: " << state.latitude
@@ -191,10 +196,17 @@ void MonitorFederate::shutdown()
     _rtiAmbassador->resignFederationExecution(rti1516e::NO_ACTION);
     std::wcout << L"[Monitor] Resigned from federation." << std::endl;
 
-    try {
+    try
+    {
         _rtiAmbassador->destroyFederationExecution(_federationName);
         std::wcout << L"[Monitor] Federation destroyed." << std::endl;
-    } catch (const rti1516e::FederatesCurrentlyJoined&) {
+    }
+    catch (const rti1516e::FederatesCurrentlyJoined &)
+    {
         std::wcout << L"[Monitor] Other federates still joined, skipping destroy." << std::endl;
+    }
+    catch (const rti1516e::FederationExecutionDoesNotExist &)
+    {
+        // Another federate already destroyed the federation, that is fine
     }
 }
