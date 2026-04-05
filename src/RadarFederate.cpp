@@ -9,7 +9,7 @@
 
 // Earth radius in km
 static const double EARTH_RADIUS = 6371.0;
-static const double PI           = 3.14159265358979323846;
+static const double PI = 3.14159265358979323846;
 
 // ------------------------------------------------------------
 // Helper: convert degrees to radians
@@ -25,9 +25,9 @@ static double toRadians(double degrees)
 // ------------------------------------------------------------
 
 RadarFederate::RadarFederate() :
-    _radarLatitude(40.4168),   // Madrid, Spain
-    _radarLongitude(-3.7038),
-    _radarRange(10.0),        // 500 km range
+    _radarLatitude(40.4939),   // Madrid-Barajas airport (LEMD) - ICAO verified
+_radarLongitude(-3.5672),
+    _radarRange(60.0),         // 60km range — covers the approach corridor
     _running(false)
 {
 }
@@ -40,8 +40,8 @@ RadarFederate::~RadarFederate()
 // initialize: connect to RTI and join the federation
 // ------------------------------------------------------------
 
-void RadarFederate::initialize(const std::wstring& federationName,
-                               const std::vector<std::wstring>& fomModules)
+void RadarFederate::initialize(const std::wstring &federationName,
+                               const std::vector<std::wstring> &fomModules)
 {
     _federationName = federationName;
 
@@ -53,10 +53,13 @@ void RadarFederate::initialize(const std::wstring& federationName,
     _rtiAmbassador->connect(*this, rti1516e::HLA_EVOKED, L"thread://");
 
     // Create the federation execution using all FOM modules
-    try {
+    try
+    {
         _rtiAmbassador->createFederationExecution(federationName, fomModules);
         std::wcout << L"[Radar] Federation created." << std::endl;
-    } catch (const rti1516e::FederationExecutionAlreadyExists&) {
+    }
+    catch (const rti1516e::FederationExecutionAlreadyExists &)
+    {
         std::wcout << L"[Radar] Federation already exists, joining." << std::endl;
     }
 
@@ -66,15 +69,15 @@ void RadarFederate::initialize(const std::wstring& federationName,
 
     // Resolve Aircraft FOM handles
     _aircraftClassHandle = _rtiAmbassador->getObjectClassHandle(L"HLAobjectRoot.Aircraft");
-    _latitudeHandle      = _rtiAmbassador->getAttributeHandle(_aircraftClassHandle, L"Latitude");
-    _longitudeHandle     = _rtiAmbassador->getAttributeHandle(_aircraftClassHandle, L"Longitude");
-    _altitudeHandle      = _rtiAmbassador->getAttributeHandle(_aircraftClassHandle, L"Altitude");
+    _latitudeHandle = _rtiAmbassador->getAttributeHandle(_aircraftClassHandle, L"Latitude");
+    _longitudeHandle = _rtiAmbassador->getAttributeHandle(_aircraftClassHandle, L"Longitude");
+    _altitudeHandle = _rtiAmbassador->getAttributeHandle(_aircraftClassHandle, L"Altitude");
 
     // Resolve RadarContact FOM handles
     _radarContactClassHandle = _rtiAmbassador->getObjectClassHandle(L"HLAobjectRoot.RadarContact");
-    _distanceHandle          = _rtiAmbassador->getAttributeHandle(_radarContactClassHandle, L"Distance");
-    _bearingHandle           = _rtiAmbassador->getAttributeHandle(_radarContactClassHandle, L"Bearing");
-    _isInRangeHandle         = _rtiAmbassador->getAttributeHandle(_radarContactClassHandle, L"IsInRange");
+    _distanceHandle = _rtiAmbassador->getAttributeHandle(_radarContactClassHandle, L"Distance");
+    _bearingHandle = _rtiAmbassador->getAttributeHandle(_radarContactClassHandle, L"Bearing");
+    _isInRangeHandle = _rtiAmbassador->getAttributeHandle(_radarContactClassHandle, L"IsInRange");
 
     // Subscribe to Aircraft and publish RadarContact
     subscribeAircraft();
@@ -116,7 +119,7 @@ void RadarFederate::publishRadarContact()
 // Uses Haversine formula for distance and spherical trigonometry for bearing
 // ------------------------------------------------------------
 
-RadarContact RadarFederate::calculateContact(const AircraftState& state) const
+RadarContact RadarFederate::calculateContact(const AircraftState &state) const
 {
     RadarContact contact;
 
@@ -128,7 +131,7 @@ RadarContact RadarFederate::calculateContact(const AircraftState& state) const
     // Haversine formula for distance
     double a = std::sin(dLat / 2) * std::sin(dLat / 2) +
                std::cos(lat1) * std::cos(lat2) *
-               std::sin(dLon / 2) * std::sin(dLon / 2);
+                   std::sin(dLon / 2) * std::sin(dLon / 2);
     double c = 2 * std::atan2(std::sqrt(a), std::sqrt(1 - a));
     contact.distance = EARTH_RADIUS * c;
 
@@ -136,7 +139,7 @@ RadarContact RadarFederate::calculateContact(const AircraftState& state) const
     double y = std::sin(toRadians(state.longitude - _radarLongitude)) * std::cos(lat2);
     double x = std::cos(lat1) * std::sin(lat2) -
                std::sin(lat1) * std::cos(lat2) *
-               std::cos(toRadians(state.longitude - _radarLongitude));
+                   std::cos(toRadians(state.longitude - _radarLongitude));
     double bearing = std::atan2(y, x) * 180.0 / PI;
 
     // Normalize bearing to 0-360 degrees
@@ -153,11 +156,11 @@ RadarContact RadarFederate::calculateContact(const AircraftState& state) const
 // ------------------------------------------------------------
 
 void RadarFederate::updateRadarContact(rti1516e::ObjectInstanceHandle radarInstance,
-                                       const RadarContact& contact)
+                                       const RadarContact &contact)
 {
     rti1516e::AttributeHandleValueMap attributes;
-    attributes[_distanceHandle]  = rti1516e::HLAfloat64BE(contact.distance).encode();
-    attributes[_bearingHandle]   = rti1516e::HLAfloat64BE(contact.bearing).encode();
+    attributes[_distanceHandle] = rti1516e::HLAfloat64BE(contact.distance).encode();
+    attributes[_bearingHandle] = rti1516e::HLAfloat64BE(contact.bearing).encode();
     attributes[_isInRangeHandle] = rti1516e::HLAboolean(contact.isInRange).encode();
 
     rti1516e::VariableLengthData tag;
@@ -173,7 +176,8 @@ void RadarFederate::run()
     std::wcout << L"[Radar] Waiting for aircraft..." << std::endl;
 
     _running = true;
-    while (_running) {
+    while (_running)
+    {
         // Process incoming RTI callbacks
         _rtiAmbassador->evokeMultipleCallbacks(0.1, 1.0);
     }
@@ -185,8 +189,8 @@ void RadarFederate::run()
 
 void RadarFederate::discoverObjectInstance(
     rti1516e::ObjectInstanceHandle theObject,
-    rti1516e::ObjectClassHandle    theObjectClass,
-    std::wstring const&            theObjectInstanceName)
+    rti1516e::ObjectClassHandle theObjectClass,
+    std::wstring const &theObjectInstanceName)
     RTI_THROW((rti1516e::FederateInternalError))
 {
     // Register the new aircraft with a default state
@@ -206,20 +210,21 @@ void RadarFederate::discoverObjectInstance(
 // ------------------------------------------------------------
 
 void RadarFederate::reflectAttributeValues(
-    rti1516e::ObjectInstanceHandle           theObject,
-    rti1516e::AttributeHandleValueMap const& theAttributeValues,
-    rti1516e::VariableLengthData const&      theUserSuppliedTag,
-    rti1516e::OrderType                      sentOrder,
-    rti1516e::TransportationType             theType,
-    rti1516e::SupplementalReflectInfo        theReflectInfo)
+    rti1516e::ObjectInstanceHandle theObject,
+    rti1516e::AttributeHandleValueMap const &theAttributeValues,
+    rti1516e::VariableLengthData const &theUserSuppliedTag,
+    rti1516e::OrderType sentOrder,
+    rti1516e::TransportationType theType,
+    rti1516e::SupplementalReflectInfo theReflectInfo)
     RTI_THROW((rti1516e::FederateInternalError))
 {
     if (_aircraftMap.find(theObject) == _aircraftMap.end())
         return;
 
     // Update the aircraft state
-    AircraftState& state = _aircraftMap[theObject];
-    for (auto& pair : theAttributeValues) {
+    AircraftState &state = _aircraftMap[theObject];
+    for (auto &pair : theAttributeValues)
+    {
         rti1516e::HLAfloat64BE value;
         value.decode(pair.second);
 
@@ -236,9 +241,9 @@ void RadarFederate::reflectAttributeValues(
     updateRadarContact(_radarInstanceMap[theObject], contact);
 
     std::wcout << L"[Radar] Contact update"
-               << L" | Distance: " << contact.distance  << L" km"
-               << L" | Bearing: "  << contact.bearing   << L" deg"
-               << L" | InRange: "  << (contact.isInRange ? L"YES" : L"NO")
+               << L" | Distance: " << contact.distance << L" km"
+               << L" | Bearing: " << contact.bearing << L" deg"
+               << L" | InRange: " << (contact.isInRange ? L"YES" : L"NO")
                << std::endl;
 }
 
@@ -247,10 +252,10 @@ void RadarFederate::reflectAttributeValues(
 // ------------------------------------------------------------
 
 void RadarFederate::removeObjectInstance(
-    rti1516e::ObjectInstanceHandle      theObject,
-    rti1516e::VariableLengthData const& theUserSuppliedTag,
-    rti1516e::OrderType                 sentOrder,
-    rti1516e::SupplementalRemoveInfo    theRemoveInfo)
+    rti1516e::ObjectInstanceHandle theObject,
+    rti1516e::VariableLengthData const &theUserSuppliedTag,
+    rti1516e::OrderType sentOrder,
+    rti1516e::SupplementalRemoveInfo theRemoveInfo)
     RTI_THROW((rti1516e::FederateInternalError))
 {
     auto it = _aircraftMap.find(theObject);
@@ -268,7 +273,8 @@ void RadarFederate::removeObjectInstance(
     _radarInstanceMap.erase(theObject);
 
     // Stop if no more aircraft are being tracked
-    if (_aircraftMap.empty()) {
+    if (_aircraftMap.empty())
+    {
         std::wcout << L"[Radar] No more aircraft. Shutting down." << std::endl;
         _running = false;
     }
@@ -283,12 +289,17 @@ void RadarFederate::shutdown()
     _rtiAmbassador->resignFederationExecution(rti1516e::NO_ACTION);
     std::wcout << L"[Radar] Resigned from federation." << std::endl;
 
-    try {
+    try
+    {
         _rtiAmbassador->destroyFederationExecution(_federationName);
         std::wcout << L"[Radar] Federation destroyed." << std::endl;
-    } catch (const rti1516e::FederatesCurrentlyJoined&) {
+    }
+    catch (const rti1516e::FederatesCurrentlyJoined &)
+    {
         std::wcout << L"[Radar] Other federates still joined, skipping destroy." << std::endl;
-    } catch (const rti1516e::FederationExecutionDoesNotExist&) {
+    }
+    catch (const rti1516e::FederationExecutionDoesNotExist &)
+    {
         // Another federate already destroyed it
     }
 }
