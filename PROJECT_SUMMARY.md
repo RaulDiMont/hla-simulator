@@ -133,8 +133,3 @@ cmake ..
 make -j8
 ./aircraft_simulator
 ```
-
-## Conversation History
-This project was developed in a Claude.ai conversation. The full conversation
-history is available and contains detailed explanations of every design
-decision, bug fix, and implementation detail.
