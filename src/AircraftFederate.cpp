@@ -180,7 +180,7 @@ void AircraftFederate::run()
 
     // We publish to RTI once per second
 
-    for (int update = 0; update < 30; ++update)
+    for (int update = 0; update < seconds; ++update)
     {
         // Run JSBSim for one second worth of simulation
         for (int step = 0; step < SIMULATION_HZ; ++step)
