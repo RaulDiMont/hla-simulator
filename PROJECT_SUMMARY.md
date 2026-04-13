@@ -17,8 +17,8 @@ Federation: AircraftSimulation
 │   ├── Calculates: Distance, Bearing, IsInRange (Haversine formula)
 │   └── Publishes: RadarContact data
 └── MonitorFederate   — Subscriber
-├── Subscribes to: Aircraft position + RadarContact
-└── Prints all data to console
+    ├── Subscribes to: Aircraft position + RadarContact
+    └── Prints all data to console
 
 ### FOM Modules
 - `AircraftFOM.xml` — Defines Aircraft object class with Latitude, Longitude, Altitude
@@ -28,7 +28,7 @@ Federation: AircraftSimulation
 - Aircraft: Airbus A320 on final approach to Madrid-Barajas (LEMD)
 - Start position: ~62km north of LEMD at 6000ft, heading south at 200 knots
 - Radar: Fixed ground station at LEMD (40.4939N, -3.5672W), 60km range
-- Duration: 30 updates at 1Hz — aircraft enters radar range at update 8
+- Duration: 60 seconds at 1Hz update rate — aircraft enters radar range after ~8 seconds
 
 ## Tech Stack
 | Component | Technology | Version |
@@ -108,28 +108,10 @@ hla_simulator/
 ## GitHub
 https://github.com/RaulDiMont/hla-simulator
 
-
-
 ## Development Environment
-
-### Windows Machine
-- OS: Windows 10
-- CPU: AMD Ryzen 7 5800X
-- Unreal Engine: 5.5.4
-- IDE: JetBrains Rider
-- Visual Studio 2022 (build tools only — required by Unreal even with Rider)
 
 ### WSL2 Environment
 - Distro: Ubuntu 22.04 LTS
 - OpenRTI: installed at /usr/local
 - JSBSim: installed at /usr/local
 - Project path: ~/hla_simulator
-- GitHub: https://github.com/RaulDiMont/hla-simulator
-
-### Building the project
-```bash
-cd ~/hla_simulator/build
-cmake ..
-make -j8
-./aircraft_simulator
-```
