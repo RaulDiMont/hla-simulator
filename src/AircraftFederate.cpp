@@ -104,7 +104,7 @@ void AircraftFederate::initialize(const std::wstring &federationName,
     _rtiAmbassador = factory.createRTIambassador();
 
     // Connect to the RTI using thread mode
-    _rtiAmbassador->connect(*this, rti1516e::HLA_EVOKED, L"thread://");
+    _rtiAmbassador->connect(*this, rti1516e::HLA_EVOKED, L"rti://localhost");
 
     // Create the federation execution using all FOM modules
     try
@@ -180,7 +180,7 @@ void AircraftFederate::run()
 
     // We publish to RTI once per second
 
-    for (int update = 0; update < 30; ++update)
+    for (int update = 0; update < seconds; ++update)
     {
         // Run JSBSim for one second worth of simulation
         for (int step = 0; step < SIMULATION_HZ; ++step)
