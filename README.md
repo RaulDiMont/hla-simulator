@@ -52,10 +52,22 @@ make -j8
 
 ## Running
 
+The simulator uses OpenRTI's TCP transport (rti://), which requires an RTI node running as a separate process. Open two terminals:
+
+Terminal 1 — RTI node (must be started first):
 ```bash
-cd hla-simulator/build
+cd ~/hla-simulator/build
+./rtinode -i 0.0.0.0:14321
+```
+
+ Terminal 2 — Simulator (once the RTI node is ready):
+```bash
+cd ~/hla-simulator/build
 ./aircraft_simulator
 ```
+
+The RTI node acts as the federation broker. All federates — including the Unreal visualization client — connect through it. Keep both processes running for the duration of the simulation.
+
 
 ## Simulation Scenario
 
