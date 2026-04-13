@@ -50,7 +50,7 @@ void RadarFederate::initialize(const std::wstring &federationName,
     _rtiAmbassador = factory.createRTIambassador();
 
     // Connect to the RTI using thread mode
-    _rtiAmbassador->connect(*this, rti1516e::HLA_EVOKED, L"thread://");
+    _rtiAmbassador->connect(*this, rti1516e::HLA_EVOKED, L"rti://localhost");
 
     // Create the federation execution using all FOM modules
     try
