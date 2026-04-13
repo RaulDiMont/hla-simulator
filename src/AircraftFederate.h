@@ -20,7 +20,7 @@ struct AircraftState {
 
 // Simulation frequency in Hz - industry standard for certified flight simulators
 static const int SIMULATION_HZ = 60;
-const int seconds = 60;
+const int seconds = 30;
 
 // Aircraft federate: uses JSBSim to simulate A320 flight dynamics
 // and publishes position to the HLA federation
