@@ -27,7 +27,7 @@ static double toRadians(double degrees)
 RadarFederate::RadarFederate() :
     _radarLatitude(40.4939),   // Madrid-Barajas airport (LEMD) - ICAO verified
 _radarLongitude(-3.5672),
-    _radarRange(60.0),         // 60km range — covers the approach corridor
+    _radarRange(10.0),         // 60km range — covers the approach corridor
     _running(false)
 {
 }

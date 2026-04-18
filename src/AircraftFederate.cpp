@@ -45,7 +45,7 @@ void AircraftFederate::initializeJSBSim()
 
     // Set initial conditions for A320 final approach to Madrid-Barajas (LEMD)
     // Start ~65km north of radar, so aircraft enters 60km range during simulation
-    _fdm->GetIC()->SetLatitudeDegIC(40.85);
+    _fdm->GetIC()->SetLatitudeDegIC(40.41);
 _fdm->GetIC()->SetLongitudeDegIC(-3.5672);
     _fdm->GetIC()->SetAltitudeASLFtIC(6000.0); // 5000ft approach altitude
     _fdm->GetIC()->SetPsiDegIC(180.0);         // Heading south towards Madrid
