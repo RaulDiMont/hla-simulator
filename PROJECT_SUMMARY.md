@@ -8,6 +8,7 @@ to Madrid-Barajas (LEMD) with a ground radar station tracking the aircraft.
 ## Architecture
 
 ### Federation Structure
+```
 Federation: AircraftSimulation
 ├── AircraftFederate  — Publisher
 │   ├── JSBSim A320 flight dynamics model
@@ -19,6 +20,7 @@ Federation: AircraftSimulation
 └── MonitorFederate   — Subscriber
     ├── Subscribes to: Aircraft position + RadarContact
     └── Prints all data to console
+```
 
 ### FOM Modules
 - `AircraftFOM.xml` — Defines Aircraft object class with Latitude, Longitude, Altitude
@@ -86,6 +88,7 @@ Two or more federates writing to std::wcout simultaneously causes mixed
 output. Fix: use a mutex-protected logging system or a dedicated log thread.
 
 ## Project Structure
+```
 hla_simulator/
 ├── CMakeLists.txt
 ├── README.md
@@ -104,6 +107,7 @@ hla_simulator/
 ├── AircraftFederate.h / .cpp
 ├── MonitorFederate.h  / .cpp
 └── RadarFederate.h    / .cpp
+```
 
 ## GitHub
 https://github.com/RaulDiMont/hla-simulator
