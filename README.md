@@ -3,6 +3,8 @@
 Distributed HLA simulation of an Airbus A320 on final approach to 
 Madrid-Barajas (LEMD), tracked by a ground radar station.
 
+![HLA Aircraft Simulator output](readme-images/hla_simulator_output.png)
+
 ## Dependencies
 
 - CMake 3.10+
